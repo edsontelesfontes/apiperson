@@ -1,0 +1,51 @@
+package com.dio.apersonapi.controller;
+
+import com.dio.apersonapi.dto.MessageResponseDTO;
+import com.dio.apersonapi.dto.PersonDTO;
+import com.dio.apersonapi.entity.Person;
+import com.dio.apersonapi.exception.PersonNotFoundException;
+import com.dio.apersonapi.repository.PersonRepository;
+import com.dio.apersonapi.service.PersonService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/people")
+@AllArgsConstructor(onConstructor = @__(Autowired))
+public class PersonController {
+    private PersonService personService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MessageResponseDTO createPerson(@RequestBody @Valid PersonDTO personDTO) {
+        return personService.createPerson(personDTO);
+    }
+
+    @GetMapping
+    public List<PersonDTO> listAll() {
+        return personService.listAll();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDTO findById(@PathVariable Long id) throws PersonNotFoundException {
+        return PersonService.findById(id);
+    }
+
+    @PutMapping("/{id}")
+    public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody  PersonDTO personDTO) throws PersonNotFoundException {
+    return personService.updateById(id, personDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws PersonNotFoundException{
+        personService.deleteById(id);
+    }
+
+}
+
